@@ -1,14 +1,32 @@
 python 大小写敏感
 
+'os模块和sys模块的区别'
+os模块负责程序与操作系统的交互，提供了访问操作系统底层的接口;
+sys模块负责程序与python解释器的交互，提供了一系列的函数和变量，用于操控python的运行时环境
+
+'在函数内n+=1错误'
 在函数内部对变量赋值进行修改后，该变量就会被Python解释器认为是局部变量而非全局变量，当程序执行到n+=1的时候，
 因为这条语句是给n赋值，所以n成为了局部变量，那么在执行print n的时候，因为n这个局部变量还没有定义，自然就会抛出这样的错误。
 那么，我们怎样才能达到在函数内部先打印，再赋值的操作呢？结论就是使用global关键字。
 
-变量可直接赋值
+'python一些简化语句'
+#if语句
+name = 'wupeiqi' if 1 == 1 else 'alex'
+#lambda
+# def func(arg):
+#     return arg + 1 
+my_lambda = lambda arg : arg + 1
+result = my_lambda(123)
+
+
+
+
 参数True必须写全，不能全部大写
 字符串：单引号、双引号都可以
 \t : Tab
 \n : Enter
+
+2**3 : 2的3次方
 
 # 查看当前工作目录
 import os
@@ -85,7 +103,7 @@ for a in list:
 if a == 'sb':
 	print(a)
 elif a>='nb':
-	print(a)
+	pass
 else:
 	print('sb')
 while t:
