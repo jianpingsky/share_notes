@@ -1,4 +1,16 @@
+'一些注意事项'
+python代码文件名，不要跟已安装模块重名
 python 大小写敏感
+python代码文件名，不要跟已安装模块重名
+参数True必须写全，不能全部大写
+字符串：单引号、双引号都可以
+\t : Tab
+\n : Enter
+2**3 : 2的3次方
+2进制是以0b开头的: 例如: 0b11 则表示十进制的3
+8进制是以0o开头的: 例如: 0o11则表示十进制的9 
+16进制是以0x开头的: 例如: 0x11则表示十进制的17
+
 
 'os模块和sys模块的区别'
 os模块负责程序与操作系统的交互，提供了访问操作系统底层的接口;
@@ -12,52 +24,95 @@ sys模块负责程序与python解释器的交互，提供了一系列的函数�
 'python一些简化语句'
 #if语句
 name = 'wupeiqi' if 1 == 1 else 'alex'
+ct = [random.randint(256) for x in range(3)] 
 #lambda
 # def func(arg):
 #     return arg + 1 
 my_lambda = lambda arg : arg + 1
 result = my_lambda(123)
 
+'颜色'
+RGB = (256,256,256)
+十六进制表示 '#ffffff'
+RGB转换为灰度=R*0.299+G*0.587+B*0.114
+
+
+'格式符 百分号形式'
+格式符为真实值预留位置，并控制显示的格式。格式符可以包含有一个类型码，用以控制显示的类型，如下:
+
+%s    字符串 (采用str()的显示)
+%d    十进制整数
+%o    八进制整数
+%x    十六进制整数
+%e    指数 (基底写为e)
+%E   指数 (基底写为E)
+%f    浮点数
+%c    Unicode单字符
+%%    字符"%"
+
+对格式进行详细控制：
+%[(name)][flags][width].[precision]typecode
+(name)为命名
+
+flags可以有+,-,' '或0。+表示右对齐正号，-表示左对齐，空格表示右对齐填充空格，0表示使用0填充。
+width表示显示宽度
+precision表示小数点后精度
+"this is a test %010.3d" %(100)
+"this is a test %(n)+10.3f" %{'n':100}
+
+'格式符 format形式'
+[[fill]align][sign][#][0][width][,][.precision][type]
+
+在python中
+2进制是以0b开头的: 例如: 0b11 则表示十进制的3
+8进制是以0o开头的: 例如: 011则表示十进制的9 
+16进制是以0x开头的: 例如: 0x11则表示十进制的17
 
 
 
-参数True必须写全，不能全部大写
-字符串：单引号、双引号都可以
-\t : Tab
-\n : Enter
-
-2**3 : 2的3次方
-
-# 查看当前工作目录
-import os
-os.getcwd()
+'文件相关操作'
+import os # 查看当前工作目录
+os.getcwd() # 查看当前工作目录
 os.listdir() #列出当前所有文件
+os.chdir('c:/python/machine_learning') # 更改当前工作目录
+# 打开文件
+f = open(fle_address, 'r') # 'r' 只读模式，'a'附加模式，如果没有会创建空文件,'w'写入模式，如果没有会创建，如果有会清空再写入
+f.close()
+
 
 #在shell中运行python代码
 1、菜单栏open，F5
 2、exec(open('main_learning.py').read())
 
-# 更改当前工作目录
-os.chdir('c:/python/machine_learning')
-
-# 打开文件
-f = open(fle_address, 'r') # 'r' 只读模式，'a'附加模式，如果没有会创建空文件,'w'写入模式，如果没有会创建，如果有会清空再写入
-f.close()
 
 #########################  常用函数  #########################
 import imp
 imp.reload(module) #导入模块之后才可reload
-
-
 array(range(12)).reshape(3,4) #将一位数组变成二维数组
-
-# 查看属性
-type(a)
+type(a) # 查看属性
 
 string.title() : First letter upper
 string.upper() : 
 string.lower() : 
 string.rstrip() : delete the blank on the right temporitaly
+
+#随机数用numpy里的random比较好用
+random.random(10):输出10个随机数[0，1)
+random.random((2,3)):输出array(2,3)形式随机数[0，1)
+random.rand(3,2,1) : 输出arrary(3,2,1)形式随机数
+random.randn(3,2,1):输出arrary(3,2,1)形式标准正态分布随机数
+random.randint(1,10,10):输出10个随机整数[1，10)
+random.normal(1,1,10) : 输出10个正态随机数mean=1，sd=1
+random.choice(10,4) : 从range(10)里随机取4个数
+
+对于多维列表排序
+list_a = [('a',3),('b',4),('c',1)]
+sorted(list_a, key=lambda tuple:tuple[2], reverse=True)  #lambda是固定写法，意思是按照元素第二个成分排序
+
+from numpy import *
+mat.min(0) #求mat数组按列最小值，结果为单行数据
+mat.max(0) #求mat数组按列最大值，结果为单行数据
+
 
 列表：
 list.append('text') /add text to last position in list
