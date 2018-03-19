@@ -1,0 +1,126 @@
+1、首先在github注册一个帐号
+
+2、本地安装git
+
+3、对于一台新的的电脑运行如下信息，这样每一步提交commit时的签名，每次提交记录里都会包含这些信息。 
+使用git config命令进行配置：
+
+$ git config --global user.name "leo_home"
+$ git config --global user.email "lvjianping1987@126.com"
+
+运行完成后，会在user/下出现一个.gitconfig文件，里面有注册信息
+
+4、连接远程github仓库时，有两种方式：
+Https：使用 HTTPS url 克隆对初学者来说会比较方便，复制HTTPS url 然后到 git Bash 里面直接用 clone 命令克隆到本地就好了，但是每次 fetch 和 push 代码都需要输入账号和密码，这也是HTTPS 方式的麻烦之处。
+SSH：而使用 SSH url 克隆却需要在克隆之前先配置和添加好SSH key，因此，如果你想要使用SSH url克隆的话，你必须是这个项目的拥有者或管理员。
+否则你是无法添加 SSH key 的，另外 SSH 默认是每次 fetch 和 push 代码都不需要输入账号和密码，如果你想要每次都输入账号密码才能进行 fetch 和 push 也可以另外进行设置，但一般人不这么做。
+
+0) # 查看本地是否已经设置过ssh，如果设置过就不用再设置了，直接找到 id_rsa.pub 或 id_dsa.pub 文件
+$ cd ~/.ssh  
+$ ls
+
+1) #生成ssh
+ssh-keygen –t rsa –C “邮箱地址”     #id_rsa.pub里面的内容就是这个密钥
+-t 指定密钥类型，默认是 rsa ，可以省略。
+-C 设置注释文字，比如邮箱。（一定要是关联你 GitHub 的注册邮箱，也就是用户名）
+-f 指定密钥文件存储文件名，在上面的命令行中我省略了 -f 参数。
+
+会提示你输入两次密码（该密码是你 push 文件的时候要输入的密码，而不是 GitHub 管理者的密码），
+当然，你也可以不输入密码，直接按回车。那么push的时候就不需要输入密码，直接提交到GitHub 上了
+
+$ eval "$(ssh-agent -s)"  # 确保启用ssh代理
+$ ssh-add ~/.ssh/id_rsa # 为 SSH key 启用 SSH 代理
+
+2) #登录你的github账号，从右上角的设置（Account Setting ）进入，然后点击菜单栏的 SSH key 进入页面添加 SSH key。
+
+3) #测试ssh是否成功
+$ ssh –T git@github.com 
+
+
+
+5、现在可以在本地新建一个仓库，或者，克隆远程github仓库到本次：
+5-1、新建本地仓库：
+$ mkdir filename  #进入到代码目录，创建并初始化Git仓库：
+$ cd filename
+$ git init #将本文件加入git控制下
+==============
+可以在新文件夹下进行一些操作
+===============
+$ git add .
+$ git commit -m "notes"
+==============
+在github新建一个仓库share_notes
+===============
+$ git remote add origin git@github.com:jianpingsky/share_notes.git #将远程仓库地址添加到本地
+$ git push -u origin master 
+
+
+
+5-2、克隆远程仓库：
+
+
+# 赋值github远程仓库有两种方式
+git clone https://github.com/jianpingsky/jquery.git  #该命令会在本地主机生成一个query目录
+git clone git@github.com:jianpingskyjquery/jquery.git  #该命令会在本地主机生成一个query目录
+
+# 复制的同时也建立了远程连接origin
+$ git remote -v # 查看当前项目下远程
+$ git remote rm name #删除不用的连接
+$ git remote rename  name1 name2 #重命名连接
+
+
+
+==========================
+git fetch
+==========================
+默认情况下，git fetch取回所有分支（branch）的更新。如果只想取回特定分支的更新，可以指定分支名
+git fetch <远程主机名> 
+git fetch <远程主机名> <分支名>
+
+从远程分支并合并
+方法一：推荐
+git fetch origin master:tmp # 在本地新建一个temp分支，并将远程origin仓库的master分支代码下载到本地temp分支
+git diff tmp #来比较本地代码与刚刚从远程下载下来的代码的区别
+git merge tmp # 合并temp分支到本地的master分支
+git branch -d temp # 如果不想保留temp分支 可以用这步删除
+
+方法二：不推荐
+$ git fetch origin master //从远程的origin仓库的master分支下载代码到本地的origin master
+$ git log -p master.. origin/master//比较本地的仓库和远程参考的区别
+$ git merge origin/master//把远程下载下来的代码合并到本地仓库，远程的和本地的合并
+
+
+==========================
+git pull
+==========================
+git pull <远程主机名> <远程分支名>:<本地分支名> //取回远程主机某个分支的更新，再与本地的指定分支合并。
+git pull origin master //取回远程主机master，再与当前分支合并
+git pull origin master：branch1 //取回远程主机master，再与指定的branch1分支合并
+
+==========================
+git push
+==========================
+$ git push <远程主机名> <本地分支名> : <远程分支名>
+git push origin master # 将本地分支推送到与之存在追踪关系的远程分支（通常两者同名），如果该远程分支不存在，则会被新建 
+git push origin ：master # 如果省略本地分支名，则表示删除指定的远程分支，等同于 git push origin --delete master
+git push origin # 如果当前分支与远程分支存在追踪关系，则本地分支和远程分支都可以省略，将当前分支推送到origin主机的对应分支 
+git push  #如果当前分支只有一个远程分支，那么主机名都可以省略，形如 git push，可以使用git branch -r ，查看远程的分支名
+git push -u origin master # 如果当前分支与多个主机存在追踪关系，则可以使用 -u 参数指定一个默认主机，这样后面就可以不加任何参数使用git push，
+
+
+==========================
+branch
+==========================
+
+分支的创建和合并
+git branch -a # -a列出所有远程及本地分支，-r列出远程分支，-v列出分支并给出hash和notes
+git branch yourbranch 
+git checkout yourbranch    #切换到yourbranch
+git checkout -b yourbranch #等于如上两布
+git branch -d yourbranch    合并完后删除本地分支
+
+
+==========================
+部分bash操作命令
+==========================
+rm -d -r file  #删除文件夹 -d表明删除文件夹 -r递归删除文件
