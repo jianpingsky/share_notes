@@ -1,0 +1,214 @@
+
+
+==================================================================== VBA 宏语句
+
+//如果代码太长，直接用 "空格"+"_" 可以将代码断成多行
+Dim a as long //定义变量，整型Integer、长整型Long、单精度浮点型Single、双精度浮点型Double、日期型Date、布尔型Boolean 
+set a=activesheet //定义对象
+Application.CutCopyMode = False //清空剪切板
+format(Date，Time //查看当天日期时间
+debug.print //可以在立即窗口(immediate window)查看，只能显示单一值，数组必须循环显示
+TypeName() //可以查看变量类型
+range("a1:a"&variable) //这个可以添加参数
+
+**************************************************** 变量
+
+  Dim arr //如果不指定类型，默认为Variant变量
+  arr = array(1,2,3)
+  arr = range("a1:c4") //variant变量可以接受多种类型
+  Redim preserve arr(4) //variant变量可以redim
+
+
+**************************************************** 数据结构：数组和字典
+
+数组中的各个数据，它们的类型必须是相同的。
+数组也应当要先声明，后使用。
+VBA中的数组有动态数组和静态数组之分。
+数组默认从0开始计数，特别指定除外
+
+一、数组
+1、静态数组
+Dim 数组名(a to b) As 数据类型：其中a和b均为数字，表示数据的索引起始值。也可以只写一个数字a，从1开始，a表示长度。
+
+2、动态数组
+如果在定义时并不知道需要使用的数组的长度是多少，则可以定义它为动态数组：
+Dim Myarr3() As String
+待确定了数组的长度之后，可以使用ReDim来重新定义数组，也就是数据长度后期可以更改
+
+Exp:
+
+  Dim array(2 to 5) as string //定义一维string数组，序号从2到5
+  Dim array(10) as string //定义一维string数组，长度为10
+  Dim array(2,3) as long //定义二维long数组
+
+  Dim array() as string //定义动态
+  Redim array(2) //定义长度为2
+  array(1) = 2
+  Redim preserve array(3) //重新定义长度3，并且保留原数据2
+
+
+
+二、字典
+ 字典其实就是一些“键－值”对。
+Dim d As Object
+Set d = CreateObject("Scripting.Dictionary")
+
+//字典中的方法
+d.Add key, item //增加键-值
+d.Exists(key) //判断key是否存在键中
+d.Keys() //获取所有键
+d.Items() //获取所有值
+d.Remove(key) //通过删除键来删除键-值
+d.RemoveAll() //清空字典
+
+//字典中的属性
+d.Count //字典中键-值对数量
+d.Key("apple") = "Orange"  //更改匹配，不存在会提示错误
+d.Item("apple") //读取
+d.Item("apple") = 10 //新增
+
+
+
+
+*************************************************** 获取指定位置
+
+（1）        已用单元格区域的第一行行序数：UsedRange.Row
+（2）        已用单元格区域的占用的行数：UsedRange.Rows.Count
+（3）        已用单元格区域的最后一列的列序数：UsedRange.Row+ UsedRange.Rows.Count-1
+（4）        已用单元格区域的第一列列序数：UsedRange.Column
+（5）        已用单元格区域的占用的列数：UsedRange.Columns.Count
+（6）        已用单元格区域的最后一列的列序数：UsedRange.Column+ UsedRange.Columns.Count-1
+（7）        已用单元格区域的占用的总单元格数：UsedRange.Cells.Count或Me.UsedRange.Count，返回的只是“行数×列数”，所以无论内部有无合并单元格，此值不受影响。
+（8）        已用单元格区域的行高：UsedRange.RowHeight，当存在多种行高时，报错94
+（9）        已用单元格区域的列宽：UsedRange.ColumnWidth，当存在多种行高时，报错94
+（10）        改变已用单元格区域所有行高：UsedRange.RowHeight=30
+（11）        改变已用单元格区域所有列宽：UsedRange.ColumnWidth=50
+（12）        选中已用单元格区域的所有行：UsedRange.EntireRow.Select
+（13）        选中已用单元格区域的所有列：UsedRange.EntireColumn.Select
+（14）        已用单元格区域的字体信息：UsedRange.Font.Bold，格式多样时，报错94
+（15）        UsedRange.Previous.Address与UsedRange.Next.Address不好用，在内部循环
+
+    activesheet.Range("A65536").End(xlUp).row //非空单元格的行数
+    ActiveSheet.Range("IV1").End(xlToLeft).Column //最后一个非空单元格的列
+    Range("a1").End(xlDown).End(xlToRight).Select
+    activesheet.usedrange.clearcontents //清除内容
+
+
+*************************************************** 筛选操作
+    Rows("1:1").Select
+    Selection.AutoFilter Field:=4, Criteria1:="4900"
+    ActiveSheet.Range("a1").AutoFilter Field:=4, Criteria1:="4900" //任何一个单元格，或区域包含筛选列就可以
+
+    Sheets("cadi_all").Range("a1:a" & tmp).SpecialCells(xlCellTypeVisible).Cells.Count //计算筛选后的行数
+    Sheets("cadi_all").Range("a1:a" & tmp).SpecialCells(12).Cells.Count //计算筛选后的行数
+
+*************************************************** sheet操作
+    Sheets.Add //添加sheet，默认在当前sheet前面
+    a=sheets.count() //sheet的数量
+    Sheets.Add After:=Sheets(sheets.count) //在最后一个sheet后添加sheet
+    Sheets.Add After:=Sheets(2) //在第2个sheet后添加sheet
+    Sheets.Add After:=Sheets("name") //根据sheet名称进行匹配
+
+    Sheets.Add after:=Sheets(Sheets.Count) //间接命名
+    myIndex = Sheets.Count
+    Sheets(myIndex).Name = myName
+
+    Sheets.Add.Name = "nb"  //直接命名
+    msgbox Activesheet.index
+
+*************************************************** 单元格选定
+    cells.select //sheet全部选择
+    range("c2") //一个单元格
+    range("c2:d4") //一个区域
+    range("$c$2:$d$4") //一个区域，同上
+    range(cells(2,"c"),cells(4,"d")) //一个区域，同上，可添加变量
+    range(cells(2,3),cells(4,4)) //一个区域，同上，可添加变量
+    Range("a1:a5, d1:d5").Select //不连续区域
+    Union(Range("a1"), Range("c1:d2"), Range("e3:f5")).Select  //不连续区域
+
+    range("3:4") //按照行进行选定
+    range(rows(1),rows(2)) //按照行进行选定
+    rows("1:2") //按照行进行选定
+
+    range("a:b") //按照列进行选定
+    range(columns(1),columns(2)) //按照列进行选定
+    columns("a:b") //按照列进行选定
+
+   Range("1:1").Find("disbursal_date").Column //选择某个特定值的单元格
+   Find (What，[After]，[LookIn]，[LookAt]，[SearchOrder]，[SearchDirection]，[MatchCase]，[MatchByte]，[SearchFormat])
+   Find (要查找的数据，开始查找的位置，查找的范围类型，完全匹配还是部分匹配，行列方式查找，向前向后查找，区分大小写，全角或半角，查找格式)
+   LookAt：xlWhole，表示全匹配
+
+*************************************************** Msgbox
+     MsgBox "this is a test" & vbcrlf & "nihao" //换行，注意&之间需要空格
+     MsgBox "this is a test" & chr(10) & "nihao" //换行，注意&之间需要空格
+
+
+
+*************************************************** 控制语句结构
+//vba控制语句不看缩进，但是看换行
+
+一、if-then-elseif-else语句
+
+If Range("a1").Value > 1 Then
+	MsgBox "大于1"
+ElseIf Range("a1").Value < 0.5 Then
+	MsgBox "小于0.5"
+Else
+	MsgBox "大于等于0.5，小于1"
+End If //别忘了加
+
+二、select case语句
+ 
+Select Case Cells(1, 1)
+Case Is > 2   				//case后跟表达式列表，用来判断的值，可以使to或者is，如case 1 to 5，表示case 1,2,3,4,5.
+    MsgBox "da yu 2"
+Case Is < 2
+    MsgBox "xiao yu 2"
+Case Else
+    MsgBox "deng yu 2"
+End Select
+    
+三、for next语句
+
+For 循环变量=<初值> to <终值> [step步长，默认为1]
+   <循环体>
+   [exit for]   ‘跳出循环触发语句，执行next后的语句
+ Next [循环变量，变量名可省略]
+
+For i = 1 To 20 Step 2
+    MsgBox i
+    If i = 11 Then 
+    		Exit For
+    End If
+Next
+
+四、For each…next语句
+
+For each 元素变量 in 集合名称或数组名称
+   <语句块>
+   [exit for]
+Next [元素变量]
+
+
+
+五、do while语句
+ 
+Do [while 逻辑表达式]   
+   <循环体>
+   [exit do]  ‘跳出循环，执行loop后的语句
+Loop //结束语句
+
+Do While i < 100
+    If i > 10 Then
+    		Exit Do
+    End If
+    MsgBox i
+Loop
+
+
+
+
+End Sub
+
+==================================================================== VBA 宏语句
