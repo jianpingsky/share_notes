@@ -11,6 +11,8 @@ debug.print //可以在立即窗口(immediate window)查看，只能显示单一值，数组必须循环
 TypeName() //可以查看变量类型
 range("a1:a"&variable) //这个可以添加参数
 
+excel的函数引用：application.worksheetfunction.sum
+
 **************************************************** 变量
 
   Dim arr //如果不指定类型，默认为Variant变量
@@ -103,6 +105,7 @@ d.Item("apple") = 10 //新增
     Sheets("cadi_all").Range("a1:a" & tmp).SpecialCells(12).Cells.Count //计算筛选后的行数
 
 *************************************************** sheet操作
+    Windows("Con_for_test.xlsx").Activate //激活文件
     Sheets.Add //添加sheet，默认在当前sheet前面
     a=sheets.count() //sheet的数量
     Sheets.Add After:=Sheets(sheets.count) //在最后一个sheet后添加sheet
